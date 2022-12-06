@@ -1,4 +1,4 @@
-import * as utils from "./Utils";
+import * as utils from "./tools/Utils";
 
 export class DayView {
 
@@ -21,7 +21,7 @@ export class DayView {
 
         if (utils.isNumeric(day)) {
             this.id = +day;
-            this.input = "./inputs/day" + this.id +".txt";
+            this.input = "day" + this.id +".txt";
 
         } else {
             this.id = -1;
@@ -32,20 +32,22 @@ export class DayView {
 
     resolve = async (): Promise<any> => { 
         if (this.id > 0) {
-            await import("./helpers/Day" + this.id).then((day) => {
-                const dayHelper = new day.Helper(this.input);
+            try {
                 
+                const dayResolver = await import("./resolvers/Day" + this.id);
+
                 var start = new Date().getTime();
-                this.answerOne = dayHelper.resolveOne().then();
+                this.answerOne = await dayResolver.resolveOne(this.input);
                 this.executionTimeOne = new Date().getTime() - start;
 
                 start = new Date().getTime();
-                this.answerTwo = dayHelper.resolveTwo();
+                this.answerTwo = await dayResolver.resolveTwo(this.input);
                 this.executionTimeTwo = new Date().getTime() - start;
                 
-            }).catch((error) => {
+            } catch (error) {
                 console.log(`\nDay ${this.id} not implemented yet!`);
-            });
+                console.log(error);
+            };
         }
     }
 }
