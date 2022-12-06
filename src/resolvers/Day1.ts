@@ -64,5 +64,5 @@ export const resolveTwo = async (filename: string): Promise<any> => {
 
     await events.once(reader, 'close');
 
-    return "" + firstCalories + "," + secondCalories + "," + thirdCalories + ", total " + (firstCalories + secondCalories + thirdCalories);
+    return "" + (firstCalories + secondCalories + thirdCalories);
 }
